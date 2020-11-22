@@ -1,36 +1,194 @@
 
 
+"use strict";
+var selection, computerSelection, playerSelection, resultsMessage;
+var _thisText = document.getElementById("text");
 
+initGame();
 
+///----------------------------------------------Buttons----------------------------------------------///
+
+let playerButtons = document.querySelectorAll(".playerButton");
+
+//Resize buttons to make them all as wide as the largest one
+maximizeButtonWidth(playerButtons);
+
+//Set button click handlers
+setButtonClickActions(playerButtons,playerSelectionClickAction);
+
+///----------------------------------------------BUTTON RESIZING----------------------------------------------///
+//#region Button resizing
 
 /**
- * Computer plays a round
- * @returns {string}
+ * Resizes element to conform to the largest width in the list
+ * @param {NodeList} _list 
+ */
+function maximizeButtonWidth(_list)
+{
+    var _maxWidth = 0;
+    for (let i = 0; i < _list.length; i++)
+    {
+        var _thisButton = _list[i];
+        _thisButton.style.width = "auto";
+        if(getWidth(_thisButton)>_maxWidth)
+        {
+            _maxWidth=getWidth(_thisButton);
+        }
+    }
+    _maxWidth += "px";
+    for (var i = 0; i < _list.length; i++)
+    {
+        setWidth(_list[i],_maxWidth);
+    }
+}
+
+/**
+ * Returns element width in pixels
+ * @param {Element} element 
+ */
+function getWidth(element)
+{
+    return parseInt(window.getComputedStyle ? window.getComputedStyle(element,null).getPropertyValue("width")  : element.currentStyle.width );
+}
+/**
+ * Sets element width
+ * @param {Element} _element 
+ * @param {number} _width 
+ */
+function setWidth(_element,_width)
+{
+    _element.style.width = _width;
+}
+//#endregion
+
+///----------------------------------------------BUTTON CLICKS----------------------------------------------///
+//#region Button clicks
+
+/**
+ * Sets all onclicks to provided funtion
+ * @param {NodeList} _list 
+ * @param {function} _function
+ */
+function setButtonClickActions(_list,_function)
+{
+    for (let i = 0; i < _list.length; i++)
+    {
+        _list[i].onclick = _function;
+    }
+}
+//#endregion
+
+///----------------------------------------------GAME FUNCTIONS----------------------------------------------///
+
+//#region Game
+/**
+ * Inits selections
+ */
+function initGame()
+{
+    selection =
+    {
+        NOONE :
+        {
+            "name" : "Undefined",
+            "beats" : "Noone"
+        },
+        ROCK :
+        {
+            "name" : "Rock",
+            "beats" : "Scissors"
+        },
+        PAPER :
+        {
+            "name" : "Paper",
+            "beats" : "Rock"
+        },
+        SCISSORS :
+        {
+            "name" : "Scissors",
+            "beats" : "Paper"
+        }
+    }
+}
+
+/**
+ * Sets playerSelection to selection relative to button pressed, sets computer selection, plays round,  
+ * and changes the text HTML element. 
+ */
+function playerSelectionClickAction()
+{
+    switch(this.id)
+    {
+        case "Rock":
+            playerSelection = selection.ROCK;
+        break;  
+        case "Paper":
+            playerSelection = selection.PAPER;
+        break; 
+        case "Scissors":
+            playerSelection = selection.SCISSORS;
+        break;
+
+        default:
+        break;
+    }
+    computerSelection = computerPlay();
+    _thisText.innerHTML = "Computer selects: " + computerSelection.name + "<br>" + "You chose: " + playerSelection.name + "<br>" + playRound(playerSelection,computerSelection);
+}
+
+/**
+ * Returns a random selection
+ * @returns {selection}
  */
 function computerPlay()
 {
-    return choose("Rock","Paper","Scissors");
+    return choose(selection.ROCK,selection.PAPER,selection.SCISSORS);
 }
-
-function getInput()
-{
-    let answer = parseInt(prompt("Please enter the number you would like to FizzBuzz up to: "));
-    return answer;
-}
-
-
-
-
-
-
-
-///----------------------------------------------UTILITY SCRIPTS----------------------------------------------///
-
-
 
 
 /**
+ * Returns a string with a win message
+ * @param {*} _computerSelection 
+ * @param {*} _playerSelection 
+ */
+function playRound(_computerSelection,_playerSelection)
+{
+  if(_computerSelection==_playerSelection)
+  {
+    return "Draw";
+  }
+  else if(_computerSelection.beats==_playerSelection.name)
+  {
+    return "Computer wins";
+  }
+  return "You win!";
+}
+
+//#endregion
+
+
+///----------------------------------------------UTILITY FUNCTIONS----------------------------------------------///
+//#region Utility
+
+/**
+ * Repeats a function _repeat amount of times
+ * @param {Function} _function 
+ * @param {Number} _repeat 
+ */
+function repeat(_function,_repeat)
+{
+    var i = 0;
+    while(i<_repeat)
+    {
+        _function();
+      i++;  
+    }
+
+}
+
+/**
  * Returns random pick of inputs
+ * @param {*} inputs ...
  */
 function choose(inputs)
 {
@@ -39,6 +197,8 @@ function choose(inputs)
 
 /**
  * Returns random int - min/max inclusive
+ * @param {Number} min
+ * @param {Number} max
  */
 function irandom_range(min, max) 
 {
@@ -49,136 +209,54 @@ function irandom_range(min, max)
 
 /**
  * Returns random float - min/max inclusive
+ * @param {Number} min
+ * @param {Number} max
  */
-function random_range(min, max) {
+function random_range(min, max)
+{
     return Math.random() * (max - min) + min;
-  }
+}
 
  
-
+/**
+ * Logs value to console
+ * @param {*} value 
+ */
 function show_debug_message(value)
 {
     console.log(value);
 }
+//#endregion
 
-////////////////////
+//#region Testing
 
-/*var canvas;
-var ctx;*/
-function gm_init(can){
-    canvas = document.getElementById(can)
-    ctx = canvas.getContext('2d');
-    console.log(ctx)
-    console.log(canvas)
-}
-
-////////////////////!DATA_STRUCTURE////////////////////
-function ds_destroy(id){
-    delete id;
-}
-
-////////////////////!DS_LIST////////////////////
-function ds_list_create(){
-    return(new Array());
-    
-}
-function ds_list_set(id, pos, val){
-    return(id[pos]=[val]);
-}
-function ds_list_delete(id, pos){
-    id.splice(pos,pos)
-}
-
-function ds_list_destroy(id){
-    id.length=0;
-}
-
-//////////////////////////////////////////////////////!Colour And Blending//////////////////////////////////////////////////////
-//draw_set_alpha(alpha);
-function draw_set_alpha(alpha){
-    ctx.globalAlpha = alpha;
-    }
-    
-    //draw_clear(color);
-    function draw_clear(color){
-    var temp_color=ctx.fillStyle;
-    ctx.fillStyle = color;
-    ctx.rect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = temp_color;
-    }
-    //draw_clear_screen();
-    function draw_clear_screen(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-    //draw_set_color(color)
-    function draw_set_color(color){
-    ctx.fillStyle = color;
-    ctx.strokeStyle = color;
-    }
-    
-    //////////////////////////////////////////////////////!Drawing Shapes//////////////////////////////////////////////////////
-    //draw_rectangle(x1,y1,x2,y2,outline);
-    function draw_rectangle(x1, y1, x2, y2,rot, outline){
-        ctx.beginPath();
-        if (rot!==undefined){
-        ctx.translate( x1+(x2-x1)/(x2-x1)/2, y2-(y2-y1) );
-        ctx.rotate(rot)}
-        
-        if (outline==false){
-            if (rot==undefined)
-        ctx.fillRect(x1, y1, x2-x1, y2-y1);
-        else
-        ctx.fillRect(-(x2-x1)/2, -(x2-x1)/2, x2-x1, y2-y1);
-        }else{
-        ctx.rect(x1+.5, y1+.5, (x2-x1), (y2-y1));    
-        ctx.closePath()
-        ctx.stroke();
-        
-    }
-    
-    }
-    //draw_circle(x,y,r,outline);
-    function draw_circle(x, y, r, outline){
-        ctx.beginPath();
-            if (outline==false) {
-    
-                ctx.arc(x+.5, y+.5, r, 0, 2 * Math.PI);
-    
-            ctx.fill();
-        }else
-            {
-                ctx.arc(x, y, r, 0, 2 * Math.PI);
-            }
-            ctx.closePath()
-            ctx.stroke();
-            
-    }
-    
-    function draw_line(x1, y1, x2, y2 ){
-    ctx.beginPath();
-    ctx.moveTo(x1, y1+.5);
-    ctx.lineTo(x2, y2+.5);
-    ctx.stroke();
-    }
-    
-    //////////////////////////////////////////////////////!Drawing Text//////////////////////////////////////////////////////
-    //draw_text(x, y, string);
-    function draw_text(x, y, string){
-        ctx.fillText(string, x, y);
-    }
-    //draw_set_font(font);
-    function draw_set_font(font,size)
+/**
+ * Tests distribution of computer selections, logs result to console
+ */
+function testComputer()
+{
+    var _rocks = 0;
+    var _paper = 0;
+    var _scissors = 0;
+    for (let i = 0; i < 1000; i++) 
     {
-        if (size!=undefined)
+        switch(computerPlay())
         {
-             ctx.font = "900 "+size+"px "+font;
-        }
-        else
-        {
-        ctx.font = font 
-        console.log("%c!NO FONT SIZE!","color: #ff0000")
+            case selection.PAPER:
+                _paper++;
+            break;
+            case selection.ROCK:
+                _rocks++;
+            break;
+            case selection.SCISSORS:
+                _scissors++;
+            break;
+            default:
+            break;
         }
     }
-    //////////////////////////////////////////////////////!Drawing Sprites//////////////////////////////////////////////////////
-    //draw_sprite(sprite, subimg, x, y);
-
+    show_debug_message("Paper: " + _paper);
+    show_debug_message("Rocks: " + _rocks);
+    show_debug_message("Scissors: " + _scissors);
+}
+//#endregion
