@@ -1,0 +1,64 @@
+.playerButton {
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    color: #FFFFFF;
+    font-family: Open Sans;
+    font-size: 40px;
+    font-weight: 100;
+    padding: 40px;
+    background-color: #3D94F6;
+    -webkit-box-shadow: 1px 1px 20px 0 #000000;
+    -moz-box-shadow: 1px 1px 20px 0 #000000;
+    box-shadow: 1px 1px 20px 0 #000000;
+    text-shadow: 1px 1px 20px #000000;
+    border: solid #337FED 1px;
+    text-decoration: none;
+   /* display: inline-block;*/
+    cursor: pointer;
+    text-align: center;
+
+ }
+ 
+ .playerButton:hover {
+    background: #1E62D0;
+    border: solid #337FED 1px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    text-decoration: none;
+ }
+
+ .divClass {
+   display: table;
+   height: 400px;
+   width: 100%;
+   text-align: center;
+ }
+
+ .spanClass {
+   display: table-cell;
+   vertical-align: middle;
+   font-size: 40px;
+   font-weight: 100;
+   font-family: Open Sans;
+ }
+
+.messageContainer{
+   display: table;
+   margin: auto;
+   width: 50%;
+   height: 600px;
+   top: 50%;
+   text-align: center;
+   font-size: 40px;
+   font-weight: 100;
+   font-family: Open Sans;
+}
+
+
+ .flex-container {
+   display: flex;
+   align-items: center;
+   justify-content: space-evenly;
+  }
