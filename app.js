@@ -86,7 +86,7 @@ function playerSelectionClickAction()
         break;
     }
     computerSelection = choose(selection.ROCK,selection.PAPER,selection.SCISSORS);
-    playRound(computerSelection,playerSelection)
+    playRound(computerSelection,playerSelection);
     fadeEffect = setInterval(fadeOutButtons,1);
 }
 
